@@ -1,35 +1,23 @@
 package ru.netology.manager;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.netology.domain.Movie;
+import ru.netology.repository.MovieRepository;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
 public class MovieManager {
-    Movie[] movies = {
-            new Movie(1, "Star Wars Ep.1", "action/sci-fi"),
-            new Movie(2, "Star Wars Ep.2", "action/sci-fi"),
-            new Movie(3, "Star Wars Ep.3", "action/sci-fi"),
-            new Movie(4, "Star Wars Ep.4", "action/sci-fi"),
-            new Movie(5, "Star Wars Ep.5", "action/sci-fi"),
-            new Movie(6, "Star Wars Ep.6", "action/sci-fi"),
-            new Movie(7, "Star Wars Ep.7", "action/sci-fi"),
-            new Movie(8, "Star Wars Ep.8", "action/sci-fi"),
-            new Movie(9, "Star Wars Ep.9", "action/sci-fi"),
-            new Movie(10, "Star Wars Ep.10", "action/sci-fi"),
-            new Movie(11, "Star Wars Ep.11", "action/sci-fi"),
-            new Movie(12, "Star Wars Ep.12", "action/sci-fi"),
-            new Movie(13, "Star Wars Ep.13", "action/sci-fi"),
-            new Movie(14, "Star Wars Ep.14", "action/sci-fi")
-    };
+    private MovieRepository repository = new MovieRepository();
 
     public void addMovie(Movie movie) {
-        int moviesLength = movies.length;
-        Movie[] tmpArray = new Movie[moviesLength + 1];
-        System.arraycopy(movies, 0, tmpArray, 0, moviesLength);
-        int lastIndex = tmpArray.length - 1;
-        tmpArray[lastIndex] = movie;
-        movies = tmpArray;
+        repository.save(movie);
     }
 
     public Movie[] getLimited(int numberOfMoviesToShow) {
+        Movie[] movies = repository.findAll();
         int moviesLength = movies.length;
         int feedMax = 10;
         if (numberOfMoviesToShow <= 0 || numberOfMoviesToShow > feedMax) {
@@ -49,5 +37,15 @@ public class MovieManager {
             customMovie[current] = movies[result];
         }
         return customMovie;
+    }
+
+    public Movie[] getAll(){
+        Movie[] movies = repository.findAll();
+        Movie[] result = new Movie[movies.length];
+        for (int i = 0; i < result.length; i++) {
+            int index = movies.length - i - 1;
+            result[i] = movies[index];
+        }
+        return result;
     }
 }
